@@ -3,7 +3,7 @@
 3 * @return {string}
 4 */
 5var frequencySort = function(s) {
-6    let frequencyCounter = new Map();
+6  let frequencyCounter = new Map();
 7  let frequencySort = [];
 8  let returnStr = "";
 9
@@ -19,16 +19,12 @@
 19  for (let i = frequencySort.length - 1; i >= 0; i--) {
 20    if (frequencySort[i]) {
 21      for (let j of frequencySort[i]) {
-22        let numOftime = i;
-23        while (numOftime > 0) {
-24          returnStr += j;
-25          numOftime--;
-26        }
-27      }
-28    }
-29  }
-30
-31//   console.log(frequencyCounter);
-32//   console.log(returnStr);
-33return returnStr;
-34};
+22        returnStr += j.repeat(i);
+23      }
+24    }
+25  }
+26
+27  //   console.log(frequencyCounter);
+28  console.log(returnStr);
+29  return returnStr;
+30};
