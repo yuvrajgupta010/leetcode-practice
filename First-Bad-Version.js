@@ -19,19 +19,16 @@
 19     */
 20    return function(n) {
 21    let leftNum = 1,
-22      rightNum = n,
-23      badVersion = null;
-24
-25    while (leftNum <= rightNum) {
-26      const midNum = Math.floor((leftNum + rightNum) / 2);
-27      if (isBadVersion(midNum)) {
-28        rightNum = midNum;
-29        badVersion = midNum;
-30        if (leftNum === rightNum) break;
-31      } else leftNum = midNum + 1;
-32    }
-33
-34    // console.log(badVersion);
-35    return badVersion;
-36    };
-37};
+22      rightNum = n;
+23
+24    while (leftNum < rightNum) {
+25      const midNum = Math.floor((leftNum + rightNum) / 2);
+26      if (isBadVersion(midNum)) {
+27        rightNum = midNum;
+28      } else leftNum = midNum + 1;
+29    }
+30
+31    // console.log(badVersion);
+32    return leftNum;
+33        };
+34};
