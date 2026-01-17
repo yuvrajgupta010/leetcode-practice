@@ -19,6 +19,6 @@
 19    }
 20  }
 21
-22  console.log(longestPrefix);
+22//   console.log(longestPrefix);
 23  return longestPrefix;
 24};
