@@ -3,22 +3,18 @@
 3 * @return {string}
 4 */
 5var longestCommonPrefix = function(strs) {
-6      let longestPrefix = strs[0];
-7
-8  for (let i = 1; i < strs.length; i++) {
-9    if (!longestPrefix.length) break;
-10
-11    let updatedPrefix = "";
-12
-13    for (let j = 0; j < longestPrefix.length; j++) {
-14      if (longestPrefix[j] === strs[i][j]) updatedPrefix += longestPrefix[j];
-15      else {
-16        longestPrefix = updatedPrefix;
-17        continue;
-18      }
-19    }
-20  }
-21
-22//   console.log(longestPrefix);
-23  return longestPrefix;
-24};
+6  let longestPrefix = "";
+7  strs.sort();
+8
+9  const lastIdx = strs.length - 1;
+10  for (let i = 0; i < Math.min(strs[0].length, strs[lastIdx].length); i++) {
+11    if (strs[0][i] === strs[lastIdx][i]) {
+12      longestPrefix += strs[0][i];
+13    } else {
+14      break;
+15    }
+16  }
+17  // console.log(longestPrefix);
+18  return longestPrefix;
+19
+20};
