@@ -11,13 +11,16 @@
 11 * @return {boolean}
 12 */
 13var hasCycle = function(head) {
-14        let currHead = head;
-15
-16    while (currHead) {
-17      if (currHead.value === null) return true;
-18      currHead.value = null;
-19      currHead = currHead.next;
-20    }
-21
-22    return false;
-23};
+14  let slow = head;
+15  let fast = head;
+16
+17  while (fast && fast.next) {
+18    slow = slow.next;
+19    fast = fast.next.next;
+20
+21    if (slow === fast) return true;
+22  }
+23
+24  return false;
+25
+26};
