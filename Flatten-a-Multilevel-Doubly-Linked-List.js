@@ -13,28 +13,36 @@
 13 * @return {_Node}
 14 */
 15var flatten = function(head) {
-16     const flattenNode = (head, savedNode) => {
+16  const flattenNode = (head) => {
 17    let currentNode = head;
-18    while (currentNode) {
-19      if (currentNode.child) {
-20        let saveNextNode = currentNode.next;
-21        let flatChild = flattenNode(currentNode.child, saveNextNode);
-22        currentNode.next = flatChild;
-23        flatChild.prev = currentNode;
-24        currentNode.child = null;
-25      } else {
-26        if (currentNode.next === null && savedNode) {
-27          currentNode.next = savedNode;
-28          savedNode.prev = currentNode;
-29          savedNode = null;
-30        }
-31      }
-32
-33      currentNode = currentNode.next;
-34      // console.log(head, "head");
-35    }
-36    return head;
-37  };
-38
-39  return flattenNode(head, null);
-40};
+18    let lastNode = null;
+19
+20    while (currentNode) {
+21      let saveNext = currentNode.next;
+22
+23      if (currentNode.child) {
+24        let childTail = flattenNode(currentNode.child);
+25
+26        currentNode.next = currentNode.child;
+27        currentNode.child.prev = currentNode;
+28        currentNode.child = null;
+29
+30        if (saveNext) {
+31          childTail.next = saveNext;
+32          saveNext.prev = childTail;
+33        }
+34
+35        lastNode = childTail;
+36      } else {
+37        lastNode = currentNode;
+38      }
+39
+40      currentNode = saveNext;
+41    }
+42
+43    return lastNode;
+44  };
+45
+46  if (head) flattenNode(head, null);
+47  return head;
+48};
