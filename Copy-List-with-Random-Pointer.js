@@ -12,38 +12,38 @@
 12 * @return {_Node}
 13 */
 14var copyRandomList = function(head) {
-15  let currentHead = head;
-16  const hashMap = new Map();
+15    if (!head) return null;
+16   let curr = head;
 17
-18  while (currentHead) {
-19    hashMap.set(currentHead, new _Node(currentHead.val, null, null));
-20    currentHead = currentHead.next;
-21  }
-22
-23  currentHead = head;
-24  while (currentHead) {
-25    const clonedCurrentNode = hashMap.get(currentHead);
-26
-27    // next wiring
-28    const currentHeadNext = currentHead.next;
-29    if (currentHeadNext) {
-30      const clonedNextNode = hashMap.get(currentHeadNext);
-31      clonedCurrentNode.next = clonedNextNode;
-32    }
-33
-34    // random wiring
-35    const currentHeadRandom = currentHead.random;
-36    if (currentHeadRandom) {
-37      const clonedRandomNode = hashMap.get(currentHeadRandom);
-38      clonedCurrentNode.random = clonedRandomNode;
-39    }
-40
-41    currentHead = currentHead.next;
-42  }
-43
-44  const returnHead = hashMap.get(head);
-45  // console.log(head);
-46
-47  // console.log(returnHead);
-48  return returnHead;
+18  // 1st step of two pass - creation
+19  while (curr) {
+20    const copy = new _Node(curr.val, curr.next, null);
+21    curr.next = copy;
+22    curr = copy.next;
+23  }
+24
+25  curr = head;
+26  // 2nd step of two pass - connection or wiring
+27  // connecting random
+28  while (curr) {
+29    if (curr.random) {
+30      curr.next.random = curr.random.next;
+31    }
+32    curr = curr.next.next;
+33  }
+34
+35  curr = head;
+36  let copyList = new _Node(-1, null, null);
+37  let last = copyList;
+38  // resetting original
+39  while (curr) {
+40    last.next = curr.next;
+41    curr.next = curr.next.next;
+42
+43    // last.next.next = null;
+44    last = last.next;
+45    curr = curr.next;
+46  }
+47
+48  return copyList.next;
 49};
