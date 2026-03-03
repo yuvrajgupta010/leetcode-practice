@@ -12,32 +12,31 @@
 12 */
 13var zigzagLevelOrder = function (root) {
 14  if (!root) return [];
-15  const traversals = [];
-16  const rightToLeftQueue = [];
-17  const leftToRightQueue = [root];
-18  let startFromLeft = true;
+15
+16  const result = [];
+17  const queue = [root];
+18  let leftToRight = true;
 19
-20  while (rightToLeftQueue.length || leftToRightQueue.length) {
-21    if (startFromLeft) {
-22      const values = [];
-23      while (leftToRightQueue.length) {
-24        const node = leftToRightQueue.shift();
-25        values.push(node.val);
-26        if (node.left) rightToLeftQueue.unshift(node.left);
-27        if (node.right) rightToLeftQueue.unshift(node.right);
-28      }
-29      traversals.push(values);
-30    } else {
-31      const values = [];
-32      while (rightToLeftQueue.length) {
-33        const node = rightToLeftQueue.shift();
-34        values.push(node.val);
-35        if (node.right) leftToRightQueue.unshift(node.right);
-36        if (node.left) leftToRightQueue.unshift(node.left);
-37      }
-38      traversals.push(values);
-39    }
-40    startFromLeft = !startFromLeft;
-41  }
-42  return traversals;
-43};
+20  while (queue.length) {
+21    const size = queue.length;
+22    const level = [];
+23
+24    for (let i = 0; i < size; i++) {
+25      const node = queue.shift();
+26
+27      if (leftToRight) {
+28        level.push(node.val);
+29      } else {
+30        level.unshift(node.val); // only small array per level
+31      }
+32
+33      if (node.left) queue.push(node.left);
+34      if (node.right) queue.push(node.right);
+35    }
+36
+37    result.push(level);
+38    leftToRight = !leftToRight;
+39  }
+40
+41  return result;
+42};
