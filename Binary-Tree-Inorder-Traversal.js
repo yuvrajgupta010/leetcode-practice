@@ -13,15 +13,29 @@
 13var inorderTraversal = function (root) {
 14  const visitedNodes = [];
 15
-16  if (!root) return visitedNodes;
+16  let curr = root;
 17
-18  const dfs = (node) => {
-19    if (node.left) dfs(node.left);
-20    visitedNodes.push(node.val);
-21    if (node.right) dfs(node.right);
-22  };
-23
-24  dfs(root);
-25
-26  return visitedNodes;
-27};
+18  while (curr) {
+19    if (!curr.left) {
+20      visitedNodes.push(curr.val);
+21      curr = curr.right;
+22      continue;
+23    }
+24
+25    let IP = curr.left;
+26    while (IP.right !== null && IP.right !== curr) {
+27      IP = IP.right;
+28    }
+29
+30    if (!IP.right) {
+31      IP.right = curr;
+32      curr = curr.left;
+33    } else {
+34      IP.right = null;
+35      visitedNodes.push(curr.val);
+36      curr = curr.right;
+37    }
+38  }
+39
+40  return visitedNodes;
+41};
