@@ -11,32 +11,21 @@
 11 * @return {TreeNode}
 12 */
 13var bstFromPreorder = function (preorder) {
-14  const makeBST = (startIdx, endIdx) => {
-15    if (startIdx === endIdx) {
-16      return new TreeNode(preorder[startIdx]);
-17    }
+14  const makeBST = (start, end) => {
+15    if (start > end) return null;
+16
+17    const root = new TreeNode(preorder[start]);
 18
-19    const currValue = preorder[startIdx];
-20    const node = new TreeNode(currValue);
-21
-22    let greaterIdx = null;
-23    for (let i = startIdx + 1; i <= endIdx; i++) {
-24      if (currValue < preorder[i]) {
-25        greaterIdx = i;
-26        break;
-27      }
-28    }
+19    let split = start + 1;
+20    while (split <= end && preorder[split] < preorder[start]) {
+21      split++;
+22    }
+23
+24    root.left = makeBST(start + 1, split - 1);
+25    root.right = makeBST(split, end);
+26
+27    return root;
+28  };
 29
-30    const leftEndIdx = greaterIdx ? greaterIdx - 1 : endIdx;
-31    if (startIdx + 1 <= leftEndIdx) {
-32      node.left = makeBST(startIdx + 1, leftEndIdx);
-33    }
-34    if (greaterIdx) {
-35      node.right = makeBST(greaterIdx, endIdx);
-36    }
-37
-38    return node;
-39  };
-40
-41  return makeBST(0, preorder.length - 1);
-42};
+30  return makeBST(0, preorder.length - 1);
+31};
