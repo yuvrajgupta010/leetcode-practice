@@ -15,27 +15,23 @@
 15  const queue = [];
 16  const map = new Map();
 17  queue.push(node);
-18
-19  while (queue.length) {
-20    const originalNode = queue.shift();
-21    const clonedNode = new _Node(originalNode.val);
-22
-23    for (let v of originalNode.neighbors) {
-24      clonedNode.neighbors.push(v.val);
-25      if (!map.has(v.val)) queue.push(v);
-26    }
-27
-28    map.set(clonedNode.val, clonedNode);
-29  }
-30
-31  for (let [_, node] of map) {
-32    const neighbors = node.neighbors;
-33
-34    for (let index = 0; index < neighbors.length; index++) {
-35      const val = neighbors[index];
-36      neighbors[index] = map.get(val);
-37    }
-38  }
-39
-40  return map.get(node.val);
-41};
+18  map.set(node, new _Node(node.val));
+19
+20  while (queue.length) {
+21    const originalNode = queue.shift();
+22    const clonedNode = map.get(originalNode);
+23
+24    for (let v of originalNode.neighbors) {
+25      let neighboreNode = map.get(v);
+26      if (!neighboreNode) {
+27        neighboreNode = new _Node(v.val);
+28        map.set(v, neighboreNode);
+29        queue.push(v);
+30      }
+31
+32      clonedNode.neighbors.push(neighboreNode);
+33    }
+34  }
+35
+36  return map.get(node);
+37};
