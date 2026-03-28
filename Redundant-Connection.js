@@ -1,71 +1,49 @@
 1
-2class Graph {
-3  constructor() {
-4    this.adjacentList = {};
-5  }
-6
-7  addVertex(vertex) {
-8    if (!this.adjacentList[vertex]) this.adjacentList[vertex] = [];
-9  }
-10
-11  addEdge(vertex1, vertex2) {
-12    const vertex1Edges = this.adjacentList[vertex1];
-13    const vertex2Edges = this.adjacentList[vertex2];
-14
-15    if (!vertex1Edges || !vertex2Edges) return;
-16    if (vertex1Edges.includes(vertex2)) return;
+2class DSU {
+3  constructor(edges) {
+4    let maxNode = 0;
+5    for (let [u, v] of edges) {
+6      maxNode = Math.max(maxNode, u, v);
+7    }
+8    this.size = Array.from({ length: maxNode + 1 }, () => 1);
+9    this.parent = Array.from({ length: maxNode + 1 }, (_, idx) => idx);
+10  }
+11
+12  findParent(node) {
+13    if (node === this.parent[node]) return node;
+14    this.parent[node] = this.findParent(this.parent[node]); // path compression
+15    return this.parent[node];
+16  }
 17
-18    vertex1Edges.push(vertex2);
-19    vertex2Edges.push(vertex1);
-20  }
+18  unionBySize(u, v) {
+19    const pu = this.findParent(u);
+20    const pv = this.findParent(v);
 21
-22  dfsIterativeFindCycle() {
-23    const visited = new Set();
-24    const parents = new Map();
-25
-26    for (let startNode of Object.keys(this.adjacentList)) {
-27      startNode = +startNode;
-28
-29      if (visited.has(startNode)) continue;
-30
-31      const stack = [startNode];
-32      parents.set(startNode, -1);
-33
-34      while (stack.length) {
-35        const node = stack.pop();
+22    if (pu === pv) {
+23      return false;
+24    }
+25    if (this.size[pu] >= this.size[pv]) {
+26      this.parent[pv] = pu;
+27      this.size[pu] += this.size[pv];
+28      return true;
+29    } else {
+30      this.parent[pu] = pv;
+31      this.size[pv] += this.size[pu];
+32      return true;
+33    }
+34  }
+35}
 36
-37        if (!visited.has(node)) {
-38          visited.add(node);
-39
-40          for (let connection of this.adjacentList[node]) {
-41            if (!visited.has(connection)) {
-42              parents.set(connection, node);
-43              stack.push(connection);
-44            } else if (parents.get(node) !== connection) {
-45              return true;
-46            }
-47          }
-48        }
-49      }
-50    }
-51
-52    return false;
-53  }
-54}
-55/**
-56 * @param {number[][]} edges
-57 * @return {number[]}
-58 */
-59var findRedundantConnection = function (edges) {
-60  const graph = new Graph();
-61
-62  for (let [u, v] of edges) {
-63    graph.addVertex(u);
-64    graph.addVertex(v);
-65    graph.addEdge(u, v);
-66
-67    if (graph.dfsIterativeFindCycle()) {
-68      return [u, v];
-69    }
-70  }
-71};
+37/**
+38 * @param {number[][]} edges
+39 * @return {number[]}
+40 */
+41var findRedundantConnection = function (edges) {
+42  const dsu = new DSU(edges);
+43
+44  for (let [u, v] of edges) {
+45    if (!dsu.unionBySize(u, v)) {
+46      return [u, v];
+47    }
+48  }
+49};
