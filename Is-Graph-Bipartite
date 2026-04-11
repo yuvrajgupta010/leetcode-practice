@@ -5,24 +5,30 @@
 5var isBipartite = function (graph) {
 6  const colorTracker = Array.from({ length: graph.length }, () => -1);
 7
-8  for (let i = 0; i < graph.length; i++) {
-9    if (colorTracker[i] !== -1) continue;
+8  const dfs = (node, color) => {
+9    colorTracker[node] = color;
 10
-11    const queue = [];
-12    queue.push(i);
-13    colorTracker[i] = 0;
-14    while (queue.length) {
-15      const node = queue.shift();
-16
-17      for (let adjacentNode of graph[node]) {
-18        if (colorTracker[adjacentNode] === colorTracker[node]) return false;
-19        if (colorTracker[adjacentNode] === -1) {
-20          queue.push(adjacentNode);
-21          colorTracker[adjacentNode] = colorTracker[node] ? 0 : 1;
-22        }
-23      }
-24    }
-25  }
-26  return true;
-27};
-28
+11    for (let adjacentNode of graph[node]) {
+12      if (colorTracker[adjacentNode] === -1) {
+13        if (!dfs(adjacentNode, 1 - color)) {
+14          return false;
+15        }
+16      } else if (colorTracker[adjacentNode] === color) {
+17        return false;
+18      }
+19    }
+20
+21    return true;
+22  };
+23
+24  for (let i = 0; i < graph.length; i++) {
+25    if (colorTracker[i] === -1) {
+26      if (!dfs(i, 0)) {
+27        return false;
+28      }
+29    }
+30  }
+31
+32  return true;
+33};
+34
