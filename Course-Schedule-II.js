@@ -14,25 +14,26 @@
 14  }
 15
 16  const queue = [];
-17  const stack = [];
+17  let pointer = 0;
 18
 19  for (let i = 0; i < numCourses; i++) {
 20    if (inDegree[i] === 0) queue.push(i);
 21  }
 22
 23  let count = 0;
-24  while (queue.length) {
-25    const node = queue.shift();
-26    stack.push(node);
-27    count++;
-28
-29    for (let adjacentNode of adjacencyList[node]) {
-30      if (!--inDegree[adjacentNode]) {
-31        queue.push(adjacentNode);
-32      }
-33    }
-34  }
-35
-36  // console.log({ adjacencyList, inDegree, queue, stack });
-37  return count === numCourses ? stack : [];
-38};
+24  while (pointer < queue.length) {
+25    const node = queue[pointer];
+26    count++;
+27
+28    for (let adjacentNode of adjacencyList[node]) {
+29      if (!--inDegree[adjacentNode]) {
+30        queue.push(adjacentNode);
+31      }
+32    }
+33
+34    pointer++;
+35  }
+36
+37  // console.log({ adjacencyList, inDegree, queue, stack });
+38  return count === numCourses ? queue : [];
+39};
