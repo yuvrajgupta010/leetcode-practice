@@ -12,26 +12,28 @@
 12 */
 13var cloneGraph = function (node) {
 14  if (!node) return node;
-15  const queue = [];
-16  const map = new Map();
-17  queue.push(node);
-18  map.set(node, new _Node(node.val));
-19
-20  while (queue.length) {
-21    const originalNode = queue.shift();
-22    const clonedNode = map.get(originalNode);
-23
-24    for (let v of originalNode.neighbors) {
-25      let neighboreNode = map.get(v);
-26      if (!neighboreNode) {
-27        neighboreNode = new _Node(v.val);
-28        map.set(v, neighboreNode);
-29        queue.push(v);
-30      }
-31
-32      clonedNode.neighbors.push(neighboreNode);
-33    }
-34  }
-35
-36  return map.get(node);
-37};
+15  const createdNodes = [];
+16  const queue = [node];
+17
+18  while (queue.length) {
+19    const oldNode = queue.shift();
+20    const newNode = new _Node(oldNode.val);
+21    createdNodes[oldNode.val] = newNode;
+22
+23    for (let adjacentNode of oldNode.neighbors) {
+24      newNode.neighbors.push(adjacentNode.val);
+25      if (!createdNodes[adjacentNode.val]) {
+26        queue.push(adjacentNode);
+27      }
+28    }
+29  }
+30
+31  for (let j = 1; j < createdNodes.length; j++) {
+32    let neighbors = createdNodes[j].neighbors;
+33    for (let i = 0; i < neighbors.length; i++) {
+34      neighbors[i] = createdNodes[neighbors[i]];
+35    }
+36  }
+37
+38  return createdNodes[1];
+39};
