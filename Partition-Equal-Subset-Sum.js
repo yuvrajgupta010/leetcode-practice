@@ -10,25 +10,28 @@
 10  if (k % 2) return false;
 11  k = k / 2;
 12
-13  const dp = Array.from({ length: n }, () =>
-14    Array.from({ length: k + 1 }, () => 0),
-15  );
-16
-17  for (let i = 0; i < n; i++) {
-18    dp[i][0] = true;
-19  }
-20  dp[0][nums[0]] = true;
+13  let prev = Array.from({ length: k + 1 }, () => false);
+14  prev[0] = true;
+15
+16  if (nums[0] <= k) prev[nums[0]] = true;
+17
+18  for (let idx = 1; idx < n; idx++) {
+19    let curr = Array.from({ length: k + 1 }, () => false);
+20    curr[0] = true;
 21
-22  for (let idx = 1; idx < n; idx++) {
-23    for (let target = 1; target <= k; target++) {
-24      const notTake = dp[idx - 1][target];
-25      let take = false;
+22    for (let target = 1; target <= k; target++) {
+23      const notTake = prev[target];
+24      let take = false;
+25
 26      if (nums[idx] <= target) {
-27        take = dp[idx - 1][target - nums[idx]];
+27        take = prev[target - nums[idx]];
 28      }
-29      dp[idx][target] = notTake || take;
-30    }
-31  }
+29
+30      curr[target] = notTake || take;
+31    }
 32
-33  return dp[n - 1][k];
-34};
+33    prev = curr; // now safe
+34  }
+35
+36  return prev[k];
+37};
