@@ -4,26 +4,19 @@
 4 * @return {number}
 5 */
 6var coinChange = function (coins, amount) {
-7  const dp = Array.from({ length: amount + 1 }, () => -1);
+7  const dp = Array(amount + 1).fill(Infinity);
 8
-9  const solve = (target) => {
-10    if (target === 0) return 0;
-11    if (target < 0) return Infinity;
-12    if (dp[target] !== -1) return dp[target];
-13
-14    let minCount = Infinity;
-15
-16    for (let coin of coins) {
-17      let c = 1 + solve(target - coin);
-18
-19      minCount = c < minCount ? c : minCount;
-20    }
-21
-22    dp[target] = minCount;
-23    return minCount;
-24  };
-25
-26  const ans = solve(amount);
-27
-28  return ans === Infinity ? -1 : ans;
-29};
+9  // Base Case
+10  dp[0] = 0;
+11
+12  for (let target = 1; target <= amount; target++) {
+13    for (let coin of coins) {
+14      // valid state
+15      if (target - coin >= 0) {
+16        dp[target] = Math.min(dp[target], 1 + dp[target - coin]);
+17      }
+18    }
+19  }
+20
+21  return dp[amount] === Infinity ? -1 : dp[amount];
+22};
