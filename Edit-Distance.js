@@ -7,27 +7,32 @@
 7  const n = word1.length;
 8  const m = word2.length;
 9
-10  const dp = Array.from({ length: n }, () =>
-11    Array.from({ length: m }, () => -1),
+10  const dp = Array.from({ length: n + 1 }, () =>
+11    Array.from({ length: m + 1 }, () => 0),
 12  );
-13
-14  const solve = (idx1, idx2) => {
-15    if (idx1 < 0) return idx2 + 1;
-16    if (idx2 < 0) return idx1 + 1;
-17
-18    if (dp[idx1][idx2] !== -1) return dp[idx1][idx2];
-19    if (word1[idx1] === word2[idx2]) {
-20      return (dp[idx1][idx2] = 0 + solve(idx1 - 1, idx2 - 1));
-21    } else {
-22      return (dp[idx1][idx2] =
-23        1 +
-24        Math.min(
-25          solve(idx1 - 1, idx2 - 1),
-26          solve(idx1 - 1, idx2),
-27          solve(idx1, idx2 - 1),
-28        )); // replace, delete, insert
-29    }
-30  };
-31
-32  return solve(n - 1, m - 1);
-33};
+13  for (let idx1 = 0; idx1 <= n; idx1++) {
+14    dp[idx1][0] = idx1;
+15  }
+16  for (let idx2 = 0; idx2 <= m; idx2++) {
+17    dp[0][idx2] = idx2;
+18  }
+19
+20  for (let idx1 = 1; idx1 <= n; idx1++) {
+21    for (let idx2 = 1; idx2 <= m; idx2++) {
+22      if (word1[idx1 - 1] === word2[idx2 - 1]) {
+23        dp[idx1][idx2] = 0 + dp[idx1 - 1][idx2 - 1];
+24      } else {
+25        dp[idx1][idx2] =
+26          1 +
+27          Math.min(
+28            dp[idx1 - 1][idx2 - 1],
+29            dp[idx1 - 1][idx2],
+30            dp[idx1][idx2 - 1],
+31          ); // replace, delete, insert
+32      }
+33    }
+34  }
+35
+36  //   console.log(dp[n][m]);
+37  return dp[n][m];
+38};
