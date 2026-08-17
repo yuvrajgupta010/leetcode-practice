@@ -4,7 +4,7 @@
  * @return {number[]}
  */
 var findAnagrams = function(s, p) {
-      const n = s.length;
+  const n = s.length;
   const m = p.length;
   if (n < m) return [];
   const a = "a".charCodeAt(0);
@@ -21,8 +21,18 @@ var findAnagrams = function(s, p) {
     sHash[s[i].charCodeAt(0) - a]++;
   }
 
+  const hasAnagram = () => {
+    for (let i = 0; i < pHash.length; i++) {
+      if (pHash[i] !== sHash[i]) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   for (let i = 0; i <= n - m; i++) {
-    if (pHashStr === sHash.toString()) {
+    if (hasAnagram()) {
       returnArr.push(i);
     }
 
