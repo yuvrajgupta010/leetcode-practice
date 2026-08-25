@@ -12,22 +12,13 @@
  * @return {ListNode}
  */
 var getIntersectionNode = function(headA, headB) {
-      const map = new Set();
+  let nodeA = headA;
+  let nodeB = headB;
 
-  let currNode = headA;
-  while (currNode) {
-    map.add(currNode);
-    currNode = currNode.next;
+  while (nodeA !== nodeB) {
+    nodeA = nodeA ? nodeA.next : headB;
+    nodeB = nodeB ? nodeB.next : headA;
   }
 
-  currNode = headB;
-  while (currNode) {
-    if (map.has(currNode)) {
-      return currNode;
-    } else {
-      currNode = currNode.next;
-    }
-  }
-
-  return null;
+  return nodeA;
 };
